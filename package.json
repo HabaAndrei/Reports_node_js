@@ -1,0 +1,22 @@
+{
+  "dependencies": {
+    "@ironsoftware/ironpdf": "^2024.6.4",
+    "@ironsoftware/ironpdf-engine-windows-x64": "^2024.6.4",
+    "@langchain/community": "^0.2.16",
+    "axios": "^1.7.2",
+    "dotenv": "^16.4.5",
+    "download": "^8.0.0",
+    "fs": "^0.0.1-security",
+    "langchain": "^0.2.8",
+    "node-fetch": "^3.3.2",
+    "page-count": "^0.0.4",
+    "pdf-lib": "^1.17.1",
+    "pdf-parse": "^1.1.1",
+    "pdf-text-reader": "^5.1.0",
+    "pdf-to-text": "^0.0.7",
+    "pdf.js-extract": "^0.2.1",
+    "pdfreader": "^3.0.2",
+    "puppeteer": "^19.7.2",
+    "puppeteer-core": "^22.12.1"
+  }
+}
