@@ -5,40 +5,46 @@ const pdfParse = require('pdf-parse');
 require('dotenv').config()
 const axios = require('axios');
 const { PDFDocument } = require('pdf-lib');
-
+const {writeVariable} = require('./diverse.js');
+const {arPageCompany} = require('./variable.js');
 
 const {ADDRESS_FLASK_SERVER} = process.env;
 
 
-
 // -----------------------------------------------------------
 async function mainFunction(){
-    const browser = await puppeteer.launch({ headless: false });
-    const page = await browser.newPage();
-    
-    await page.goto('https://bvb.ro/FinancialInstruments/Markets/Shares', {waitUntil : 'domcontentloaded'});
+    try{
+        const browser = await puppeteer.launch({ headless: false });
+        const page = await browser.newPage();
+        
+        await page.goto('https://bvb.ro/FinancialInstruments/Markets/Shares', {waitUntil : 'domcontentloaded'});
 
-    await page.setViewport({width: 1200, height: 850});
-    
-    const ar_links = await returnArrayWithLinks(page)
-    
+        await page.setViewport({width: 1200, height: 850});
+        
+        const ar_links = await returnArrayWithLinks(page)
+        writeVariable('./variable.js', 'arPageCompany', ar_links);
 
-    // console.log(ar_links[0]);
-    // const rap_page = await raportPage(ar_links[0].href);
-
-    
-    for(let  i = 0 ; i<5; i++){
-        let ob = ar_links[i];
-        const rap_page = await raportPage(ob.href);
-        const {nume, token} = ob;
-        console.log(nume, token, rap_page, '=<<<<<<<<<<<<<<,!!!!!!!!!!!!!!!!!!!!')
-        // if(rap_page){
-        //     await sendRequest(nume, token, rap_page);
+        console.log(ar_links.length);
+        // let arCuPdfRap = [];
+        // for(let  i = 0 ; i<ar_links.length; i++){
+        //     let ob = ar_links[i];
+        //     const rap_page = await raportPage(ob.href);
+        //     const {nume, token} = ob;
+        //     console.log(i, nume, token, rap_page, '=<<<<<<<<<<<<<<,!!!!!!!!!!!!!!!!!!!!')
+        //     arCuPdfRap.push(rap_page);
+        //     // if(rap_page){
+        //     //     await sendRequest(nume, token, rap_page);
+        //     // }
+        //     break;
         // }
-    }
+        // fs.writeFileSync('./ok', JSON.stringify(ar_links));
+
    
+    }catch(err){
+        console.log('am avut o eroare dar e ok', err)
+    }
 }
-mainFunction();
+// mainFunction();
 
 
 //-----------------------------------------------------------------
@@ -114,7 +120,7 @@ async function raportPage(link){
         let hrefs = [];
         for(let tr of arrayTr){
             const tds = tr.querySelectorAll('td');
-            const titlu = tds[1].innerText;
+            const titlu = tds[1]?.innerText;
             if(titlu === 'Raport anual 2023' ){
                 const tag = tds[2];
                 const miniTabel = tag.querySelectorAll('a');
@@ -123,9 +129,13 @@ async function raportPage(link){
                 });
             }
         }
+        //
+        //
         return hrefs;
     })
     const href_anual_raport = await returnBigPdf(arElemA);
+
+    await browser.close();
 
     if(href_anual_raport){
         return href_anual_raport
@@ -140,49 +150,42 @@ async function raportPage(link){
 
 //----------------------------------------------------------------
 async function returnArrayWithLinks(page){
-        
+    
     let allLinksWithTokens = [];
-
-    async function recursivitate(){
-        return new Promise(async (resolve, reject)=>{
-
-            if(allLinksWithTokens.length >= 86){resolve(''); return };
-
-            const rows = await page?.evaluate(_ =>{ 
-                let elem  = document.querySelectorAll('#gv > tbody  tr');
-                let arElem = Array.from(elem);
-                return arElem.map((row)=>{
-                    const token = row.querySelector('td span a b').innerText
-                    const nume = row.querySelectorAll('td')[1].innerText;
-                    const href = row.querySelector('td span a').href;
-                    // console.log({href, token, nume})
-                    return {href, token, nume}
-                })
-            });
-
-            for(let row of rows){
-                if(allLinksWithTokens.indexOf(row) >= 0){
-                    continue;
+    return new Promise((resolve, reject)=>{
+        async function recursivitate(){
+            try{
+                const rows = await page?.evaluate(_ =>{ 
+                    let elem  = document.querySelectorAll('#gv > tbody  tr');
+                    let arElem = Array.from(elem);
+                    return arElem.map((row)=>{
+                        const token = row.querySelector('td span a b')?.innerText
+                        const nume = row.querySelectorAll('td')[1]?.innerText;
+                        const href = row.querySelector('td span a').href;
+                        // console.log({href, token, nume})
+                        return {href, token, nume}
+                    })
+                });
+                // console.log(rows.length, '<<<= rows')
+                // allLinksWithTokens.concat(rows);
+                const arUnice = arrayCuObUnice([...allLinksWithTokens, ...rows])
+                allLinksWithTokens = [...arUnice];
+                if (allLinksWithTokens.length >= 86) {
+                    // console.log('a intrat aici si ce se intampla ??????/', allLinksWithTokens.length)
+                    resolve(allLinksWithTokens);
+                    
                 }else{
-                    allLinksWithTokens.push(row);
+    
+                    await page.click("#gv_next"); 
+                    // console.log(allLinksWithTokens.length, '=<<<< a intrat la recursivitate!!')   
+                    await recursivitate();
                 }
+            }catch(err){
+                reject(err);
             }
-
-            if (allLinksWithTokens.length >= 86) {
-
-                resolve('');
-                return;
-            }else{
-
-                await page.click("#gv_next");    
-                await recursivitate();
-                resolve('')
-            }
-        });
-    }
-
-    await recursivitate();
-    return allLinksWithTokens;
+        }
+        recursivitate();
+    })
 }
 
 
@@ -213,3 +216,42 @@ async function numberOfPages(linkPDF){
 
 // console.log(numberOfPages('https://bvb.ro/infocont/infocont24/RMAH_20240425161858_RMAH-Raport-anual-2023-25-04-2024---RO.pdf'))
 // --------------------------------------------------------------
+
+
+function arrayCuObUnice(arCuObiecte){
+    let obCuValTest = {};
+    arCuObiecte.forEach((ob)=>{
+        obCuValTest[JSON.stringify(ob)] = ob;
+    })
+    return (Object.values(obCuValTest))
+
+}
+
+//------------------------------------------------
+async function recreateOb(array){
+    let arrayNou = [];
+
+    try{
+        for(let i = 0 ; i<array.length; i++){
+            try{
+                let obNou  = {};
+                let ob  = array[i];
+                let hrefNou = await raportPage(ob.href);
+                obNou = {...ob, href : hrefNou};
+                arrayNou.push(obNou);
+                console.log(i)
+            }catch(err){
+                console.log('a intrat in asta mica');
+                continue;
+            }
+        }
+    }catch(err){
+        console.log('mergem mai departe ')
+    }
+    writeVariable('./variable.js', 'arPdfPage', arrayNou);
+
+}
+recreateOb(arPageCompany)
+
+
+module.exports = {raportPage};
