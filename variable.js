@@ -822,161 +822,466 @@
   }
 ];
 
+ 
+const arForFuzzySearch = [
+"FONDUL PROPRIETATEA",
+"FP",
+"OIL TERMINAL S.A.",
+"OIL",
+"OMV PETROM S.A.",
+"SNP",
+"TTS (TRANSPORT TRADE SERVICES) S.A.",
+"TTS",
+"BANCA TRANSILVANIA S.A.",
+"TLV",
+"SSIF BRK FINANCIAL GROUP SA",
+"BRK",
+"SOCIETATEA ENERGETICA ELECTRICA S.A.",
+"EL",
+"BRD - GROUPE SOCIETE GENERALE S.A.",
+"BRD",
+"TERAPLAST SA",
+"TRP",
+"S.N.G.N. ROMGAZ S.A.",
+"SNG",
+"SOCIETATEA DE PRODUCERE A ENERGIEI ELECTRICE IN HIDROCENTRALE HIDROELECTRICA S.A.",
+"H2O",
+"PREBET SA AIUD",
+"PREB",
+"SPHERA FRANCHISE GROUP",
+"SFG",
+"IMPACT DEVELOPER & CONTRACTOR S.A.",
+"IMP",
+"ONE UNITED PROPERTIES",
+"ONE",
+"BURSA DE VALORI BUCURESTI SA",
+"BVB",
+"S.N.T.G.N. TRANSGAZ S.A.",
+"TGN",
+"ZENTIVA S.A.",
+"SCD",
+"S.N. NUCLEARELECTRICA S.A.",
+"SNN",
+"TRANSILVANIA BROKER DE ASIGURARE SA",
+"TBK",
+"Digi Communications N.V.",
+"DIGI",
+"ANTIBIOTICE S.A.",
+"ATB",
+"BIOFARM S.A.",
+"BIO",
+"AQUILA PART PROD COM",
+"AQ",
+"C.N.T.E.E. TRANSELECTRICA",
+"TEL",
+"CHIMCOMPLEX BORZESTI SA ONESTI",
+"CRC",
+"COMPA S. A.",
+"CMP",
+"ALUMIL ROM INDUSTRY S.A.",
+"ALU",
+"S.C AAGES S.A.",
+"AAG",
+"Med Life S.A.",
+"M",
+"EVERGENT INVESTMENTS S.A.",
+"EVER",
+"ROMCARBON SA",
+"ROCE",
+"CONPET SA",
+"COTE",
+"SOCEP S.A.",
+"SOCP",
+"IAR SA Brasov",
+"IARV",
+"AEROSTAR S.A.",
+"ARS",
+"FARMACEUTICA REMEDIA SA",
+"RMAH",
+"PURCARI WINERIES PUBLIC COMPANY LIMITED",
+"WINE",
+"ROMCAB SA",
+"MCAB",
+"ROMPETROL RAFINARE S.A.",
+"RRC",
+"ELECTROMAGNETICA SA",
+"ELMA",
+"TURBOMECANICA S.A.",
+"TBM",
+"ROMPETROL WELL SERVICES S.A.",
+"PTR",
+"ROPHARMA SA",
+"RPH",
+"CARBOCHIM S.A.",
+"CBC",
+"PATRIA BANK S.A.",
+"PBK",
+"INFINITY CAPITAL INVESTMENTS S.A.",
+"INFINITY",
+"ALRO S.A.",
+"ALR",
+"LONGSHIELD INVESTMENT GROUP S.A.",
+"SIF4",
+"LION CAPITAL S.A.",
+"LION",
+"UCM RESITA S.A.",
+"UCM",
+"ROCA INDUSTRY HOLDINGROCK1 S.A.",
+"ROC1",
+"TURISM, HOTELURI, RESTAURANTE MAREA NEAGRA S.A.",
+"EFO",
+"SINTEZA S.A.",
+"STZ",
+"UAMT S.A.",
+"UAM",
+"PREFAB SA",
+"PREH",
+"SIF HOTELURI SA",
+"CAOR",
+"ALTUR S.A.",
+"ALT",
+"BERMAS S.A.",
+"BRM",
+"COMPANIA ENERGOPETROL S.A.",
+"ENP",
+"SANTIERUL NAVAL ORSOVA S.A.",
+"SNO",
+"ARTEGO SA",
+"ARTE",
+"COMELF S.A.",
+"CMF",
+"TURISM FELIX S.A.",
+"TUFE",
+"MECANICA CEAHLAU",
+"MECF",
+"COMCM SA CONSTANTA",
+"CMCM",
+"PROMATERIS S.A.",
+"PPL",
+"ELECTROAPARATAJ S.A.",
+"ELJ",
+"MECANICA FINA SA",
+"MECE",
+"GRUPUL INDUSTRIAL ELECTROCONTACT S.A.",
+"ECT",
+"ARMATURA S.A.",
+"ARM",
+"CASA DE BUCOVINA-CLUB DE MUNTE",
+"BCM",
+"CEMACON SA",
+"CEON",
+"VES SA",
+"VESY",
+"UZTEL S.A.",
+"UZT"
+];
 
  
- const arForFuzzySearch = [
-  "FONDUL PROPRIETATEA",
-  "FP",
-  "OIL TERMINAL S.A.",
-  "OIL",
-  "OMV PETROM S.A.",
-  "SNP",
-  "TTS (TRANSPORT TRADE SERVICES) S.A.",
-  "TTS",
-  "BANCA TRANSILVANIA S.A.",
-  "TLV",
-  "SSIF BRK FINANCIAL GROUP SA",
-  "BRK",
-  "SOCIETATEA ENERGETICA ELECTRICA S.A.",
-  "EL",
-  "BRD - GROUPE SOCIETE GENERALE S.A.",
-  "BRD",
-  "TERAPLAST SA",
-  "TRP",
-  "S.N.G.N. ROMGAZ S.A.",
-  "SNG",
-  "SOCIETATEA DE PRODUCERE A ENERGIEI ELECTRICE IN HIDROCENTRALE HIDROELECTRICA S.A.",
-  "H2O",
-  "PREBET SA AIUD",
-  "PREB",
-  "SPHERA FRANCHISE GROUP",
-  "SFG",
-  "IMPACT DEVELOPER & CONTRACTOR S.A.",
-  "IMP",
-  "ONE UNITED PROPERTIES",
-  "ONE",
-  "BURSA DE VALORI BUCURESTI SA",
-  "BVB",
-  "S.N.T.G.N. TRANSGAZ S.A.",
-  "TGN",
-  "ZENTIVA S.A.",
-  "SCD",
-  "S.N. NUCLEARELECTRICA S.A.",
-  "SNN",
-  "TRANSILVANIA BROKER DE ASIGURARE SA",
-  "TBK",
-  "Digi Communications N.V.",
-  "DIGI",
-  "ANTIBIOTICE S.A.",
-  "ATB",
-  "BIOFARM S.A.",
-  "BIO",
-  "AQUILA PART PROD COM",
-  "AQ",
-  "C.N.T.E.E. TRANSELECTRICA",
-  "TEL",
-  "CHIMCOMPLEX BORZESTI SA ONESTI",
-  "CRC",
-  "COMPA S. A.",
-  "CMP",
-  "ALUMIL ROM INDUSTRY S.A.",
-  "ALU",
-  "S.C AAGES S.A.",
-  "AAG",
-  "Med Life S.A.",
-  "M",
-  "EVERGENT INVESTMENTS S.A.",
-  "EVER",
-  "ROMCARBON SA",
-  "ROCE",
-  "CONPET SA",
-  "COTE",
-  "SOCEP S.A.",
-  "SOCP",
-  "IAR SA Brasov",
-  "IARV",
-  "AEROSTAR S.A.",
-  "ARS",
-  "FARMACEUTICA REMEDIA SA",
-  "RMAH",
-  "PURCARI WINERIES PUBLIC COMPANY LIMITED",
-  "WINE",
-  "ROMCAB SA",
-  "MCAB",
-  "ROMPETROL RAFINARE S.A.",
-  "RRC",
-  "ELECTROMAGNETICA SA",
-  "ELMA",
-  "TURBOMECANICA S.A.",
-  "TBM",
-  "ROMPETROL WELL SERVICES S.A.",
-  "PTR",
-  "ROPHARMA SA",
-  "RPH",
-  "CARBOCHIM S.A.",
-  "CBC",
-  "PATRIA BANK S.A.",
-  "PBK",
-  "INFINITY CAPITAL INVESTMENTS S.A.",
-  "INFINITY",
-  "ALRO S.A.",
-  "ALR",
-  "LONGSHIELD INVESTMENT GROUP S.A.",
-  "SIF4",
-  "LION CAPITAL S.A.",
-  "LION",
-  "UCM RESITA S.A.",
-  "UCM",
-  "ROCA INDUSTRY HOLDINGROCK1 S.A.",
-  "ROC1",
-  "TURISM, HOTELURI, RESTAURANTE MAREA NEAGRA S.A.",
-  "EFO",
-  "SINTEZA S.A.",
-  "STZ",
-  "UAMT S.A.",
-  "UAM",
-  "PREFAB SA",
-  "PREH",
-  "SIF HOTELURI SA",
-  "CAOR",
-  "ALTUR S.A.",
-  "ALT",
-  "BERMAS S.A.",
-  "BRM",
-  "COMPANIA ENERGOPETROL S.A.",
-  "ENP",
-  "SANTIERUL NAVAL ORSOVA S.A.",
-  "SNO",
-  "ARTEGO SA",
-  "ARTE",
-  "COMELF S.A.",
-  "CMF",
-  "TURISM FELIX S.A.",
-  "TUFE",
-  "MECANICA CEAHLAU",
-  "MECF",
-  "COMCM SA CONSTANTA",
-  "CMCM",
-  "PROMATERIS S.A.",
-  "PPL",
-  "ELECTROAPARATAJ S.A.",
-  "ELJ",
-  "MECANICA FINA SA",
-  "MECE",
-  "GRUPUL INDUSTRIAL ELECTROCONTACT S.A.",
-  "ECT",
-  "ARMATURA S.A.",
-  "ARM",
-  "CASA DE BUCOVINA-CLUB DE MUNTE",
-  "BCM",
-  "CONTED SA",
-  "CNTE",
-  "CEMACON SA",
-  "CEON",
-  "VES SA",
-  "VESY",
-  "UZTEL S.A.",
-  "UZT"
+ const arObNameToken = [
+  {
+    "nume": "FONDUL PROPRIETATEA",
+    "token": "FP"
+  },
+  {
+    "nume": "OIL TERMINAL S.A.",
+    "token": "OIL"
+  },
+  {
+    "nume": "OMV PETROM S.A.",
+    "token": "SNP"
+  },
+  {
+    "nume": "TTS (TRANSPORT TRADE SERVICES) S.A.",
+    "token": "TTS"
+  },
+  {
+    "nume": "BANCA TRANSILVANIA S.A.",
+    "token": "TLV"
+  },
+  {
+    "nume": "SSIF BRK FINANCIAL GROUP SA",
+    "token": "BRK"
+  },
+  {
+    "nume": "SOCIETATEA ENERGETICA ELECTRICA S.A.",
+    "token": "EL"
+  },
+  {
+    "nume": "BRD - GROUPE SOCIETE GENERALE S.A.",
+    "token": "BRD"
+  },
+  {
+    "nume": "TERAPLAST SA",
+    "token": "TRP"
+  },
+  {
+    "nume": "S.N.G.N. ROMGAZ S.A.",
+    "token": "SNG"
+  },
+  {
+    "nume": "SOCIETATEA DE PRODUCERE A ENERGIEI ELECTRICE IN HIDROCENTRALE HIDROELECTRICA S.A.",
+    "token": "H2O"
+  },
+  {
+    "nume": "PREBET SA AIUD",
+    "token": "PREB"
+  },
+  {
+    "nume": "SPHERA FRANCHISE GROUP",
+    "token": "SFG"
+  },
+  {
+    "nume": "IMPACT DEVELOPER & CONTRACTOR S.A.",
+    "token": "IMP"
+  },
+  {
+    "nume": "ONE UNITED PROPERTIES",
+    "token": "ONE"
+  },
+  {
+    "nume": "BURSA DE VALORI BUCURESTI SA",
+    "token": "BVB"
+  },
+  {
+    "nume": "S.N.T.G.N. TRANSGAZ S.A.",
+    "token": "TGN"
+  },
+  {
+    "nume": "ZENTIVA S.A.",
+    "token": "SCD"
+  },
+  {
+    "nume": "S.N. NUCLEARELECTRICA S.A.",
+    "token": "SNN"
+  },
+  {
+    "nume": "TRANSILVANIA BROKER DE ASIGURARE SA",
+    "token": "TBK"
+  },
+  {
+    "nume": "Digi Communications N.V.",
+    "token": "DIGI"
+  },
+  {
+    "nume": "ANTIBIOTICE S.A.",
+    "token": "ATB"
+  },
+  {
+    "nume": "BIOFARM S.A.",
+    "token": "BIO"
+  },
+  {
+    "nume": "AQUILA PART PROD COM",
+    "token": "AQ"
+  },
+  {
+    "nume": "C.N.T.E.E. TRANSELECTRICA",
+    "token": "TEL"
+  },
+  {
+    "nume": "CHIMCOMPLEX BORZESTI SA ONESTI",
+    "token": "CRC"
+  },
+  {
+    "nume": "COMPA S. A.",
+    "token": "CMP"
+  },
+  {
+    "nume": "ALUMIL ROM INDUSTRY S.A.",
+    "token": "ALU"
+  },
+  {
+    "nume": "S.C AAGES S.A.",
+    "token": "AAG"
+  },
+  {
+    "nume": "Med Life S.A.",
+    "token": "M"
+  },
+  {
+    "nume": "EVERGENT INVESTMENTS S.A.",
+    "token": "EVER"
+  },
+  {
+    "nume": "ROMCARBON SA",
+    "token": "ROCE"
+  },
+  {
+    "nume": "CONPET SA",
+    "token": "COTE"
+  },
+  {
+    "nume": "SOCEP S.A.",
+    "token": "SOCP"
+  },
+  {
+    "nume": "IAR SA Brasov",
+    "token": "IARV"
+  },
+  {
+    "nume": "AEROSTAR S.A.",
+    "token": "ARS"
+  },
+  {
+    "nume": "FARMACEUTICA REMEDIA SA",
+    "token": "RMAH"
+  },
+  {
+    "nume": "PURCARI WINERIES PUBLIC COMPANY LIMITED",
+    "token": "WINE"
+  },
+  {
+    "nume": "ROMCAB SA",
+    "token": "MCAB"
+  },
+  {
+    "nume": "ROMPETROL RAFINARE S.A.",
+    "token": "RRC"
+  },
+  {
+    "nume": "ELECTROMAGNETICA SA",
+    "token": "ELMA"
+  },
+  {
+    "nume": "TURBOMECANICA S.A.",
+    "token": "TBM"
+  },
+  {
+    "nume": "ROMPETROL WELL SERVICES S.A.",
+    "token": "PTR"
+  },
+  {
+    "nume": "ROPHARMA SA",
+    "token": "RPH"
+  },
+  {
+    "nume": "CARBOCHIM S.A.",
+    "token": "CBC"
+  },
+  {
+    "nume": "PATRIA BANK S.A.",
+    "token": "PBK"
+  },
+  {
+    "nume": "INFINITY CAPITAL INVESTMENTS S.A.",
+    "token": "INFINITY"
+  },
+  {
+    "nume": "ALRO S.A.",
+    "token": "ALR"
+  },
+  {
+    "nume": "LONGSHIELD INVESTMENT GROUP S.A.",
+    "token": "SIF4"
+  },
+  {
+    "nume": "LION CAPITAL S.A.",
+    "token": "LION"
+  },
+  {
+    "nume": "UCM RESITA S.A.",
+    "token": "UCM"
+  },
+  {
+    "nume": "ROCA INDUSTRY HOLDINGROCK1 S.A.",
+    "token": "ROC1"
+  },
+  {
+    "nume": "TURISM, HOTELURI, RESTAURANTE MAREA NEAGRA S.A.",
+    "token": "EFO"
+  },
+  {
+    "nume": "SINTEZA S.A.",
+    "token": "STZ"
+  },
+  {
+    "nume": "UAMT S.A.",
+    "token": "UAM"
+  },
+  {
+    "nume": "PREFAB SA",
+    "token": "PREH"
+  },
+  {
+    "nume": "SIF HOTELURI SA",
+    "token": "CAOR"
+  },
+  {
+    "nume": "ALTUR S.A.",
+    "token": "ALT"
+  },
+  {
+    "nume": "BERMAS S.A.",
+    "token": "BRM"
+  },
+  {
+    "nume": "COMPANIA ENERGOPETROL S.A.",
+    "token": "ENP"
+  },
+  {
+    "nume": "SANTIERUL NAVAL ORSOVA S.A.",
+    "token": "SNO"
+  },
+  {
+    "nume": "ARTEGO SA",
+    "token": "ARTE"
+  },
+  {
+    "nume": "COMELF S.A.",
+    "token": "CMF"
+  },
+  {
+    "nume": "TURISM FELIX S.A.",
+    "token": "TUFE"
+  },
+  {
+    "nume": "MECANICA CEAHLAU",
+    "token": "MECF"
+  },
+  {
+    "nume": "COMCM SA CONSTANTA",
+    "token": "CMCM"
+  },
+  {
+    "nume": "PROMATERIS S.A.",
+    "token": "PPL"
+  },
+  {
+    "nume": "ELECTROAPARATAJ S.A.",
+    "token": "ELJ"
+  },
+  {
+    "nume": "MECANICA FINA SA",
+    "token": "MECE"
+  },
+  {
+    "nume": "GRUPUL INDUSTRIAL ELECTROCONTACT S.A.",
+    "token": "ECT"
+  },
+  {
+    "nume": "ARMATURA S.A.",
+    "token": "ARM"
+  },
+  {
+    "nume": "CASA DE BUCOVINA-CLUB DE MUNTE",
+    "token": "BCM"
+  },
+  {
+    "nume": "CONTED SA",
+    "token": "CNTE"
+  },
+  {
+    "nume": "CEMACON SA",
+    "token": "CEON"
+  },
+  {
+    "nume": "VES SA",
+    "token": "VESY"
+  },
+  {
+    "nume": "UZTEL S.A.",
+    "token": "UZT"
+  }
 ];
 
 module.exports = {arPageCompany, arPdfPage}; 

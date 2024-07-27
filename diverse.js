@@ -9,15 +9,24 @@ function writeVariable(numeFisier, numeVariabila, cotinutVariabila){
 }
 
 
-function returnArrayForFuzzySearch(){
-    let arFinal = [];
-    for(let ob of arPdfPage){
-        arFinal.push(ob.nume, ob.token);
+function createFuzzySearchVariable(){
+    const arTokens = fs.readFileSync('./token.txt', "utf8").replace(/\r/g, '').split('\n');
+
+    let arFuzzy = [];
+    for(let token of arTokens){
+        let ob = arPdfPage.find((ob)=>ob.token == token)
+        arFuzzy.push(ob.nume, ob.token);
     }
-    writeVariable('./variable.js', 'arForFuzzySearch', arFinal);
+
+    writeVariable("./variable.js", "arForFuzzySearch", arFuzzy)
 }
-returnArrayForFuzzySearch()
 
-
-
+function variableNameToken(){
+    let arObNameToken = [];
+    arPdfPage.forEach((ob)=>{
+        arObNameToken.push({nume: ob.nume, token: ob.token});
+    })
+    writeVariable("./variable.js", "arObNameToken", arObNameToken);
+}
+variableNameToken()
 module.exports={writeVariable};
