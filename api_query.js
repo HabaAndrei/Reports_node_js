@@ -1,28 +1,63 @@
+const { values } = require('pdf-lib');
 const {client_db} = require('./config_PG.js');
 
 const comands = {
-    add_mess : {
+    add_conv_in_db : {
         func : async (oo)=>{
-            const {mesaj, tip_mesaj, uid, id_conversatie} = oo; 
+            const { uid, id_conv, token} =  oo;
             const query = {
-                text : 'insert into lista_mesaje (mesaj, tip_mesaj, uid, id_conversatie) values ($1, $2, $3, $4);',
-                values: [mesaj, tip_mesaj, uid, id_conversatie]
-            }
+                text: 'insert into lista_conversatii (uid, id_conv, token) values ($1, $2, $3);',
+                values : [uid, id_conv, token],
+            };
             return await client_db.query(query);
         },
-        require_params : ['mesaj', 'tip_mesaj', 'uid', 'id_conversatie']
+        require_params : ['uid', 'id_conv', 'token']
     },
-    get_mess : {
+    add_mess_in_db : {
         func : async (oo)=>{
-            const {uid, id_conversatie} = oo;
+            const { ar } =  oo;
             const query = {
-                text : 'select mesaj, tip_mesaj from lista_mesaje where uid = $1 and id_conversatie = $2 order by id;',
-                values: [uid, id_conversatie]
-            
+                text: `
+                INSERT INTO lista_mesaje (mesaj, tip_mesaj, uid, id_conversatie, token)
+                SELECT (json_data->>'mesaj')::text, (json_data->>'tip_mesaj')::text, (json_data->>'uid')::text,
+                (json_data->>'id_conversatie')::text,  (json_data->>'token')::text
+                FROM json_array_elements($1::json) AS json_data
+                `,
+                values : [JSON.stringify(ar)],
+            };
+            return await client_db.query(query);
+        },
+        require_params : ['ar']
+    },
+    getMessFromId_conv : {
+        func : async (oo)=>{
+            const {id_conversatie, uid, token} = oo;
+            const query =  {
+                text : 'select mesaj , tip_mesaj from lista_mesaje where id_conversatie = $1 and uid = $2 and token = $3 order by id ',
+                values : [id_conversatie, uid, token],
             }
             return await client_db.query(query);
         }, 
-        require_params : ['uid', 'id_conversatie'],
+        require_params: ['id_conversatie', 'uid', 'token']
+    },
+    getAllConversations:{
+        func : async (oo)=>{
+            const {uid} = oo;
+            const query= {
+                text: `
+                    with min_ids as (
+                    select min(l1.id) as min_id from lista_mesaje l1 
+                    where l1.tip_mesaj = 'raspuns' and l1.uid = $1 
+                    group by l1.id_conversatie
+                    )
+                    select l1.min_id, l2.mesaj, l2.id_conversatie, l2.token from min_ids l1 join (select id, mesaj, id_conversatie, token from lista_mesaje) l2 on l1.min_id = l2.id
+
+                `,
+                values: [uid]
+            }
+            return client_db.query(query);
+        },
+        require_params: ['uid'],
     }
     
 }
@@ -47,7 +82,6 @@ async function exec_comands(comand_name, params={}){
 
     try{
         let rez =  await comands[comand_name].func(params);
-        console.log(rez.rows, 'perfect');
         return {type: true, data: rez.rows};
     }catch(err){
         console.log(err);
@@ -56,4 +90,6 @@ async function exec_comands(comand_name, params={}){
 
     }
 }
-exec_comands('get_mess', {uid:'uid', id_conversatie: 'id_conversatie'})
+// exec_comands('get_mess', {uid:'uid', id_conversatie: 'id_conversatie'})
+
+module.exports = {exec_comands};
