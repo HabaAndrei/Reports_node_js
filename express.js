@@ -53,6 +53,17 @@ app.post('/getAllConversations', async (req, res)=>{
     }
 })
 
+app.post('/deleteChat', async  (req, res)=>{
+    const {uid, id_conversatie} = req.body;
+    try{
+        let rez = await exec_comands('deleteChat', {uid, id_conversatie});
+        res.send(rez);
+    }catch(err){
+        res.send({type: false, err: err});
+    }
+
+})
+
 const PORT = 5500;
 app.listen(PORT, ()=>{
     console.log('we are listening on port ', PORT);

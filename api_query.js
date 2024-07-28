@@ -58,6 +58,18 @@ const comands = {
             return client_db.query(query);
         },
         require_params: ['uid'],
+    },
+    deleteChat:{
+        func : async (oo) =>{
+            const { uid, id_conversatie} = oo;
+            const query = {
+                text : `
+                `,
+                values : [uid, id_conversatie],
+            }
+            return client_db.query(query);
+        },
+        require_params: ['uid', 'id_conversatie'],
     }
     
 }
