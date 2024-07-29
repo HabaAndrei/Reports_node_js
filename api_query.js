@@ -64,8 +64,12 @@ const comands = {
             const { uid, id_conversatie} = oo;
             const query = {
                 text : `
+                BEGIN;
+                delete from lista_mesaje where uid = '${uid}' and id_conversatie = '${id_conversatie}';
+                delete from lista_conversatii  where uid = '${uid}' and id_conv = '${id_conversatie}';
+                COMMIT;
                 `,
-                values : [uid, id_conversatie],
+                values : [],
             }
             return client_db.query(query);
         },
