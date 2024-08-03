@@ -74,6 +74,28 @@ const comands = {
             return client_db.query(query);
         },
         require_params: ['uid', 'id_conversatie'],
+    },
+    manage_question_FU: {
+        func : async (oo)=>{
+            const {ip} = oo;
+            // CREATE OR REPLACE FUNCTION manage_question(address TEXT)
+            // RETURNS BOOLEAN AS $$
+            // DECLARE 
+            //     nr integer;
+            // BEGIN
+            //     SELECT count(*) INTO nr FROM manage_question_FU WHERE ip_address = address;
+            //     IF nr > 5 THEN
+            //         RETURN FALSE;
+            //     ELSE
+            //         INSERT INTO manage_question_FU (ip_address, num) VALUES (address, 1);
+            //         RETURN TRUE;
+            //     END IF;
+            // END $$ LANGUAGE plpgsql;
+            const query = {text : 'SELECT manage_question($1)', values : [ip]};
+            return client_db.query(query);
+        },
+        require_params: ['ip'],
+
     }
     
 }

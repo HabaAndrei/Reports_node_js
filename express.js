@@ -2,10 +2,30 @@ const express = require('express');
 const cors = require('cors');
 const {exec_comands} = require('./api_query.js');
 const { client_db } = require('./config_PG.js');
-
+const admin = require('firebase-admin');
+const {ob_firebase} = require('./ob_firebase.js');
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+const config = {
+    credential: admin.credential.cert(ob_firebase),
+};
+
+admin.initializeApp(config);
+
+async function verify_id_token(user_token){
+    try{
+        let rez = await admin.auth().verifyIdToken(user_token);
+        let uid = rez.uid;
+        if(uid){
+            return {type: true, uid}
+        }else{  return {type: false} };
+    }catch(err){
+        return {type: false, err};
+    }
+   
+}
 
 
 app.post('/add_conv_in_db', async (req, res)=>{
@@ -44,10 +64,15 @@ app.post('/getMessFromId_conv', async (req, res)=>{
 })
 
 app.post('/getAllConversations', async (req, res)=>{
-    const {uid} = req.body;
+    const {uid, user_token} = req.body;
     try{
-        let rez = await exec_comands('getAllConversations', {uid});
-        res.send(rez);
+        let rez_token = await verify_id_token(user_token)
+        if(rez_token.type && rez_token.uid === uid){
+            let rez = await exec_comands('getAllConversations', {uid});
+            res.send(rez);
+        }else{
+            res.send(401);
+        }
     }catch(err){
         res.send({type: false, err: err});
     }
@@ -62,6 +87,16 @@ app.post('/deleteChat', async  (req, res)=>{
         res.send({type: false, err: err});
     }
 
+})
+
+app.post('/manage_question_FU', async (req, res)=>{
+    const {ip} = req.body;
+    try{
+        let rez = await exec_comands('manage_question_FU', {ip});
+        res.send(rez);
+    }catch(err){
+        res.send({type: false, err: err});
+    }
 })
 
 const PORT = 5500;
