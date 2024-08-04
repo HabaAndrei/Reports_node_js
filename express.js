@@ -14,6 +14,8 @@ const config = {
 
 admin.initializeApp(config);
 
+
+
 async function verify_id_token(user_token){
     try{
         let rez = await admin.auth().verifyIdToken(user_token);
@@ -24,7 +26,16 @@ async function verify_id_token(user_token){
     }catch(err){
         return {type: false, err};
     }
-   
+}
+
+async function test_middleware(req, res, next){
+    const {uid, user_token} = req.body;
+    let rez_token = await verify_id_token(user_token)
+    if(rez_token.type && rez_token.uid === uid){
+        next();
+    }else{
+        res.status(401).send('Unauthorized');
+    }
 }
 
 
@@ -63,20 +74,19 @@ app.post('/getMessFromId_conv', async (req, res)=>{
     }
 })
 
-app.post('/getAllConversations', async (req, res)=>{
+
+
+app.post('/getAllConversations', test_middleware,  async (req, res)=>{
+
     const {uid, user_token} = req.body;
     try{
-        let rez_token = await verify_id_token(user_token)
-        if(rez_token.type && rez_token.uid === uid){
-            let rez = await exec_comands('getAllConversations', {uid});
-            res.send(rez);
-        }else{
-            res.send(401);
-        }
+        let rez = await exec_comands('getAllConversations', {uid});
+        res.send(rez);
     }catch(err){
         res.send({type: false, err: err});
     }
 })
+
 
 app.post('/deleteChat', async  (req, res)=>{
     const {uid, id_conversatie} = req.body;
